@@ -2,6 +2,9 @@
 #For full credit, answer at least 5/7 questions
 
 #List names of students collaborating with: 
+# Megan Richardson
+# Krista Bebis
+# Madeline Hoorn
 
 ### SETUP: RUN THIS BEFORE STARTING ----------
 library(tidyverse)
@@ -18,6 +21,11 @@ ds <- tibble(id, x, y, z)
 #Write a function called "limit_replace" that replaces values less than 2 or greater than 8 with NA
 #The function should take a vector as input and return the replaced-vector as an output
 #Then, run the function on x and save the results to a new vector "x_replace" to show it worked
+limit_replace <- function(al) { #named it my initials
+   ifelse(al<2 | al>8, NA, al)
+  }
+
+limit_replace(x)
 
 
 ### Question 2 ---------- 
