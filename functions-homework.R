@@ -1,3 +1,4 @@
+# Aylin Luna
 #PSYC 259 Homework - Writing functions and iteration
 #For full credit, answer at least 5/7 questions
 
@@ -25,7 +26,7 @@ limit_replace <- function(al) { #named it my initials
    ifelse(al<2 | al>8, NA, al)
   }
 
-limit_replace(x)
+x_replace <- limit_replace(x)
 
 
 ### Question 2 ---------- 
@@ -33,7 +34,11 @@ limit_replace(x)
 #Make a new version of limit_replace includes arguments for a lower boundary and an upper boundary
 #so that the limits can be specified (instead of being hard coded as 2 and 8)
 #Run the function on vector y with boundaries 4 and 6, saving the results to a new vector "y_replace"
+new_limit_replace <- function(al, lower, upper) { #named it my initials
+  ifelse(al<lower | al>upper, NA, al)
+}
 
+y_replace <- new_limit_replace(y, lower = 4, upper = 6)
 
 ### Question 3 ----------
 
@@ -43,11 +48,18 @@ limit_replace(x)
 #Make num_of_SDs default to 1
 #The output should be a named list two values, lower and upper.
 #Running plus_minus_SD(x) should produce: $lower 2.142724 $upper 8.048324
-
+plus_minus_SD <- function(vec, num_of_SDs) {
+  lower <- mean(vec)-num_of_SDs*sd(vec)
+  upper <- mean(vec)+num_of_SDs*sd(vec)
+  return(list(lower = lower, upper = upper))
+}
+plus_minus_SD(x, 1)
+plus_minus_SD(y, 2)
 
 ### Question 4 ----------
 # Use a map function to run the new function on x, y, and z with 1 SD
-
+map_vectors <- list(x, y, z)
+map(map_vectors, plus_minus_SD, 1)
 
 ### Question 5 ----------
 
@@ -57,6 +69,7 @@ limit_replace(x)
 # Apply the function to each column in ds, and save the results to a new tibble called "ds_replace"
 # Hint: you will need an if() statement to handle what to do if boundaries are not given
 
+#skipped :(
 
 ### Question 6 ----------
 # Question 6 will use the iris dataset
@@ -68,13 +81,28 @@ limit_replace(x)
 # summary stats to a file named "SPECIESNAME_summary.csv"
 
 ds_iris <- iris
+glimpse(iris)
+species_summary <- function(data, species_name) {
+  data %>% filter(Species == species_name) %>% 
+  summarize(across(where(is.numeric),
+            list(min = ~min(.x, na.rm = T),
+                 mean = ~ mean(.x, na.rm = T),
+                 max = ~max(.x, na.rm = T),
+                 sd = ~sd(.x, na.rm = T))))
+}
 
+setosa <- species_summary(ds_iris, "setosa")                 
+write.csv(setosa, "setosa_summary.csv")     
+#not sure how to get the function to create the csv
+            
 
 ### Question 7 ----------
 # Use some type of iteration to run the species_summary() function 
 # on each of the species in ds_iris, capturing the resulting summary data
 # into a tibble
-
+all_species <- unique(ds_iris$Species)
+summary_data <- map_dfr(all_species, ~species_summary(ds_iris, .x))
+  #almost there just missing the csv part
 
 # If correct, you will have a 3 observation by 16 variable tibble (first 3 columns below)
 # Sepal.Length_min Sepal.Length_mean  Sepal.Length_max 
